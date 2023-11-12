@@ -12,7 +12,9 @@ This project requrires setting up VITE scaffolding via npm:
 -	CTRL Click the hyperlink provided to confirm the server is functioning
 -	CTRL C to close server operation
 -	Npm install -D @babylonjs/core
--	  Clear the style.css, main.js, (optional) delete counter.js, and modify the title in index.html.
--	  This has already been completed for the scaffold pages provided in this repo.
+-	While Babylon is loading, clear the style.css, main.js, (optional) delete counter.js, and modify the title in index.html.
+-	Remove the <div> element
+-	  Add: <canvas id="canvas"></canvas> in body
+-	  Add <style>#canvas {width: 100%; height:100%;}</style>
 -	Add a <link stylesheet> reference to style.css
 -	Npm run dev to confirm.
