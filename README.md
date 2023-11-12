@@ -1,6 +1,7 @@
 # VITE_Scaffold_Beta
 
-This project requrires setting up VITE scaffolding via npm:
+This project requrires setting up VITE scaffolding via npm.
+The full tutorial can be found here: https://www.youtube.com/watch?v=e6EkrLr8g_o&t=347s
 -	Set up a directory on machine
 -	Open directory in editor (VSCode), view Terminal
 -	Enter:
