@@ -1,13 +1,12 @@
 import * as BABYLON from '@babylonjs/core';
 
 const canvas = document.getElementById('renderCanvas');
-
 const engine = new BABYLON.Engine(canvas);
-
 const createScene = async function() {
   const scene = new BABYLON.Scene(engine);
 
-//CAMERAS
+
+//#region Cameras_______________________
 
 //Default Camera/Light Type:
 //scene.createDefaultCameraOrLight(true, false, true);
@@ -28,15 +27,18 @@ const camera = new BABYLON.ArcRotateCamera('camera', 0,0,20, new BABYLON.Vector3
 camera.attachControl(true);
 
 camera.setPosition(new BABYLON.Vector3(0,3,-4));
-//camera.lowerBetaLimit = Math.PI / 4;
-//camera.upperBetaLimit = Math.PI / 2
-//camera.lowerRadiusLimit = 20;
-//camera.upperRadiusLimit = 50;
+/* camera.lowerBetaLimit = Math.PI / 4;
+camera.upperBetaLimit = Math.PI / 2
+camera.lowerRadiusLimit = 20;
+camera.upperRadiusLimit = 50; */
 
   //Utility layer for constructor which is passed to gizmos:
    const utilLayer = new BABYLON.UtilityLayerRenderer(scene); 
 
-//LIGHTS
+//#endregion
+
+//#region Lights_______________________
+
 //POINT LIGHT:
 //takes three arguments:
 
@@ -48,24 +50,36 @@ camera.setPosition(new BABYLON.Vector3(0,3,-4));
 
 //SPOTLIGHT
 //takes 6 arguments: name, location, direction, angle of cone, decay w distance, scene:
-
+//Standard no rotation
 /* const light = new BABYLON.SpotLight (
   'spotLight',
-  new BABYLON.Vector3(0,1,0),
+  new BABYLON.Vector3(0,5,0),
   new BABYLON.Vector3(0,-1,0),
   Math.PI / 3,
   2,
   scene
 );
-light.range = 2; */
+light.range = 8; */
+
+const light = new BABYLON.SpotLight (
+  'spotLight',
+  new BABYLON.Vector3(-3,5,0),
+  new BABYLON.Vector3(.5,-1,0),
+  Math.PI / 3,
+  2,
+  scene
+);
+light.range = 8;
 
 //DIRECTIONAL
-const light = new BABYLON.DirectionalLight (
+//Directional lights do not produce shadows!
+
+/* const light = new BABYLON.DirectionalLight (
   'directionalLight',
   new BABYLON.Vector3(-2,-3,0),
   scene
 );
-light.intensity = .5;
+light.intensity = 1; */
 
 
 //Hemispheric Light
@@ -81,11 +95,15 @@ light.intensity = .5;
 
 light.intensity = 1; */
 
+
 //Light Gizmo must be after instance:
 const lightGizmo = new BABYLON.LightGizmo(utilLayer);
 lightGizmo.light = light; 
 
-//Create a Box in a scene:
+//#endregion
+
+//#region Box_______________________
+
 const box = new BABYLON.MeshBuilder.CreateBox('myBox', {
     size: 0.7,
  /* width: 2,
@@ -114,8 +132,8 @@ const box = new BABYLON.MeshBuilder.CreateBox('myBox', {
    boxSixSides.diffuseTexture = new BABYLON.Texture('/Assets/sixSides.png')
 
    //Box position on screen:
-  /*  box.position.x = 1;
-   box.position = new BABYLON.Vector3(-1, 0.5, 0); */
+   box.position.x = 1;
+   box.position = new BABYLON.Vector3(0, .5, 0); 
 
    //Box Rotation on screen:
   /*box.rotation.x = Math.PI / 4;
@@ -143,8 +161,10 @@ const box = new BABYLON.MeshBuilder.CreateBox('myBox', {
 /*     const planeGizmo = new BABYLON.PlaneRotationGizmo(new BABYLON.Vector3(0,1,0), BABYLON.Color3.Red(), utilLayer);
    planeGizmo.attachedMesh = box;  */
 
+//#endregion
 
-//Create a sphere in a scene:
+//#region Sphere_______________________
+
 /*  const sphere = new BABYLON.MeshBuilder.CreateSphere('mySphere',{
   segments:50,
   diameter: 0.3,
@@ -178,31 +198,35 @@ sphere.material = sphereMaterial; */
 //sphereMaterial.emissiveTexture = new BABYLON.Texture('/Assets/Plates.jpg');
 
 
+//#endregion
 
-//Create Ground object:
+//#region Ground Object_______________________
+
 const ground = new BABYLON.MeshBuilder.CreateGround('', {
   height: 10,
   width: 10,
-  subdivisions: 0,
-  subdivisionsX: 0
+  //subdivisions: 0,
+  //subdivisionsX: 0
 });
+
+//Add basic color to ground:
+/* let groundMaterial = new BABYLON.StandardMaterial("GroundMaterial", scene);
+groundMaterial.diffuseColor = BABYLON.Color3.Green();
+ground.material = groundMaterial; */
+
 //modify position of ground object:
-ground.position = new BABYLON.Vector3(0,-1,1);
+ground.position = new BABYLON.Vector3(0,0,0);
 
-
- ground.material = new BABYLON.StandardMaterial();
-//ground.material.wireframe = true; 
-//ground.material = new BABYLON.Color3(0,1,10);
-
-//Add Texture to ground:
+//Add texture to ground:
 //NOTE: Modified to 'diffuseTexture', not 'emissiveTexture' as nothing was appearing:
-/* const groundSixSides = new BABYLON.StandardMaterial();
+/*ground.material = new BABYLON.StandardMaterial();
+  const groundSixSides = new BABYLON.StandardMaterial();
   ground.material = groundSixSides;
   groundSixSides.emissiveTexture = new BABYLON.Texture('/Assets/Plywood.jpg')
-   groundSixSides.emissiveTexture.vScale = -1;
+  groundSixSides.emissiveTexture.vScale = -1;
   groundSixSides.emissiveTexture.uOffset = 10;
   groundSixSides.emissiveTexture.vOffset = 1.4;
-  groundSixSides.emissiveTexture.uScale = 5;  */
+  groundSixSides.emissiveTexture.uScale = 5;   */
 
   const groundSixSides = new BABYLON.StandardMaterial();
   ground.material = groundSixSides;
@@ -222,7 +246,9 @@ ground.position = new BABYLON.Vector3(0,-1,1);
 });
 groundFromHM.material = new BABYLON.StandardMaterial();
 groundFromHM.material.wireframe = true;   */
+//#endregion
 
+//#region Text Mesh _______________________
 
 //Add Mesh Text Object (As the await is called (const fontData = await(await), Remember to add 'async' to call: 
 //const createScene = async function() and add 'await' to
@@ -234,9 +260,9 @@ const text = BABYLON.MeshBuilder.CreateText('', 'My Text', fontData, {
   depth: 0.02,
   resolution: 2
 }) */
+//#endregion
 
-
-//ANIMATIONS:
+//#region Animations_______________________
 
 //Automatic animation:
 //Animate objects by calling and registering frame rates 60 times per second:
@@ -289,10 +315,25 @@ animation.setKeys(animationKeys);
 box.animations = [];
 box.animations.push(animation);
 scene.beginAnimation(box, 0, 250, true);
+//#endregion
+
+//#region Shadows_______________________
+
+const shadowGenerator = new BABYLON.ShadowGenerator(1024, light);
+
+//shadowGenerator.addShadowCaster(box);
+shadowGenerator.getShadowMap().renderList.push(box);
+ground.recieveShadows = true;
+shadowGenerator.setDarkness(0);
+//#endregion
+ 
+//#region RETURN SCENE_______________________
 
   return scene;
+  //#endregion
 }
 
+//#region SCENE RENDER
 const scene = await createScene();
 
 //render frame at screen frame rate (60fps)
@@ -304,3 +345,4 @@ engine.runRenderLoop(function() {
 window.addEventListener('resize', function() {
   engine.resize();
 })
+//#endregion
