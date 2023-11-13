@@ -71,7 +71,7 @@ sphere.material = sphereMaterial;
 //sphereMaterial.wireframe = true;
 
 //Textures:
-sphereMaterial.diffuseTexture = new BABYLON.Texture('/Assets/Plates.jpg');
+//sphereMaterial.diffuseTexture = new BABYLON.Texture('/Assets/Plates.jpg');
 sphereMaterial.emissiveTexture = new BABYLON.Texture('/Assets/Plates.jpg');
 
 
