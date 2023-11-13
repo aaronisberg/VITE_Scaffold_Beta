@@ -8,6 +8,7 @@ The full tutorial can be found here: https://www.youtube.com/watch?v=e6EkrLr8g_o
 -	Npm create vite@latest
 -	  Use default javascript/vanilla options
 -	Once built, close the editor, open the project directory just created and start a new instance of VS Code.
+-	If running from a clone, simply run install:
 -	Run npm install
 -	Npm run dev
 -	CTRL Click the hyperlink provided to confirm the server is functioning
