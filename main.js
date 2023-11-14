@@ -1,4 +1,6 @@
 import * as BABYLON from '@babylonjs/core';
+import '@babylonjs/loaders/glTF';
+import {Inspector} from '@babylonjs/inspector';
 
 const canvas = document.getElementById('renderCanvas');
 const engine = new BABYLON.Engine(canvas);
@@ -26,7 +28,7 @@ camera.setTarget(BABYLON.Vector3.Zero()); */
 const camera = new BABYLON.ArcRotateCamera('camera', 0,0,20, new BABYLON.Vector3(0,0,0), scene);//20 represents the radius from the target or center of scene
 camera.attachControl(true);
 
-camera.setPosition(new BABYLON.Vector3(0,3,-4));
+camera.setPosition(new BABYLON.Vector3(0,1,-14));
 /* camera.lowerBetaLimit = Math.PI / 4;
 camera.upperBetaLimit = Math.PI / 2
 camera.lowerRadiusLimit = 20;
@@ -63,13 +65,14 @@ light.range = 8; */
 
 const light = new BABYLON.SpotLight (
   'spotLight',
-  new BABYLON.Vector3(-3,5,0),
-  new BABYLON.Vector3(.5,-1,0),
+  new BABYLON.Vector3(-1,5,-9),//xaxis,scale,yaxis
+  new BABYLON.Vector3(.5,-1,5),//angle,height,rotation
   Math.PI / 3,
-  2,
+  5,
   scene
 );
-light.range = 8;
+light.range = 20;
+light.intensity = 1;
 
 //DIRECTIONAL
 //Directional lights do not produce shadows!
@@ -105,10 +108,10 @@ lightGizmo.light = light;
 //#region Box_______________________
 
 const box = new BABYLON.MeshBuilder.CreateBox('myBox', {
-    size: 0.7,
- /* width: 2,
-  height: 0.05,
-  depth: 0.5,*/
+  size: 5,
+  width: 2,
+  height: .5,
+  depth: 0.5,
 /*   faceColors:[
     new BABYLON.Color4(1,0,0,1),
     BABYLON.Color3.Green() ]  */
@@ -129,7 +132,7 @@ const box = new BABYLON.MeshBuilder.CreateBox('myBox', {
 
    const boxSixSides = new BABYLON.StandardMaterial();
    box.material = boxSixSides;
-   boxSixSides.diffuseTexture = new BABYLON.Texture('/Assets/sixSides.png')
+   boxSixSides.diffuseTexture = new BABYLON.Texture('/Assets/Images/view.jpg')
 
    //Box position on screen:
    box.position.x = 1;
@@ -193,9 +196,9 @@ sphere.material = sphereMaterial; */
 
 //Sphere Textures:
 //diffuse texture (requires light source):
-//sphereMaterial.diffuseTexture = new BABYLON.Texture('/Assets/Plates.jpg');
+//sphereMaterial.diffuseTexture = new BABYLON.Texture('/Assets/Images/Plates.jpg');
 //emissive texture:
-//sphereMaterial.emissiveTexture = new BABYLON.Texture('/Assets/Plates.jpg');
+//sphereMaterial.emissiveTexture = new BABYLON.Texture('/Assets/Images/Plates.jpg');
 
 
 //#endregion
@@ -203,10 +206,10 @@ sphere.material = sphereMaterial; */
 //#region Ground Object_______________________
 
 const ground = new BABYLON.MeshBuilder.CreateGround('', {
-  height: 10,
-  width: 10,
-  //subdivisions: 0,
-  //subdivisionsX: 0
+  height: 40,
+  width: 40,
+  subdivisions: 1,
+  subdivisionsX: 0
 });
 
 //Add basic color to ground:
@@ -222,7 +225,7 @@ ground.position = new BABYLON.Vector3(0,0,0);
 /*ground.material = new BABYLON.StandardMaterial();
   const groundSixSides = new BABYLON.StandardMaterial();
   ground.material = groundSixSides;
-  groundSixSides.emissiveTexture = new BABYLON.Texture('/Assets/Plywood.jpg')
+  groundSixSides.emissiveTexture = new BABYLON.Texture('/Assets/Images/Plywood.jpg')
   groundSixSides.emissiveTexture.vScale = -1;
   groundSixSides.emissiveTexture.uOffset = 10;
   groundSixSides.emissiveTexture.vOffset = 1.4;
@@ -230,7 +233,7 @@ ground.position = new BABYLON.Vector3(0,0,0);
 
   const groundSixSides = new BABYLON.StandardMaterial();
   ground.material = groundSixSides;
-  groundSixSides.diffuseTexture = new BABYLON.Texture('/Assets/Plywood.jpg')
+  groundSixSides.diffuseTexture = new BABYLON.Texture('/Assets/Images/Plywood.jpg')
   groundSixSides.diffuseTexture.vScale = 1;
   groundSixSides.diffuseTexture.uOffset = 0;
   groundSixSides.diffuseTexture.vOffset = 0;
@@ -254,12 +257,16 @@ groundFromHM.material.wireframe = true;   */
 //const createScene = async function() and add 'await' to
 //const scene = await createScene()
 
-/* const fontData = await(await fetch('/Assets/Font/Fast Hand_Regular.json')).json();
-const text = BABYLON.MeshBuilder.CreateText('', 'My Text', fontData, {
-  size: 2,
+
+const fontData = await(await fetch('/Assets/Font/Fast Hand_Regular.json')).json();
+const text = BABYLON.MeshBuilder.CreateText('', 'Perimeter', fontData, {
+  size: 1,
   depth: 0.02,
   resolution: 2
-}) */
+})
+
+  text.position.y = 1;
+
 //#endregion
 
 //#region Animations_______________________
@@ -323,10 +330,58 @@ const shadowGenerator = new BABYLON.ShadowGenerator(1024, light);
 
 //shadowGenerator.addShadowCaster(box);
 shadowGenerator.getShadowMap().renderList.push(box);
-ground.recieveShadows = true;
-shadowGenerator.setDarkness(0);
+ground.receiveShadows = true;
+shadowGenerator.setDarkness(.01);
 //#endregion
- 
+
+ //#region Fog_______________________
+
+//LINEAR Fog
+/* scene.fogMode = BABYLON.Scene.FOGMODE_LINEAR;
+scene.fogStart = 20;
+scene.fogEnd = 60; */
+
+//EXPONENTIAL Fog
+/* scene.fogMode = BABYLON.Scene.FOGMODE_EXP;
+scene.Density = .1;
+scene.fogColor = new BABYLON.Color3(.1,.1,.3); */
+
+//#endregion
+
+//#region Models_______________________
+//Models can be imported by calling the loader Namespace
+/* BABYLON.SceneLoader.ImportMesh(
+  '',
+  '/',
+  '../Assets/GlTF/Wolf.gltf',
+  scene,
+  function(meshes, particleSystems, skeletons, animationGroups) {
+    const model = meshes[0];
+    model.scaling = new BABYLON.Vector3(0.5,0.5,0.5);
+
+    animationGroups[5].play(true);
+  }
+); */
+
+/* BABYLON.SceneLoader.ImportMeshAsync(
+  '',
+  '/',
+  '../Assets/GlTF/Wolf.gltf',
+  scene)
+     .then((result) => {
+  const importedAnimGroups = result.animationGroups;
+  importedAnimGroups[0].play(true);
+})
+ */
+//#endregion
+
+//#region Sound_______________________
+const bgMusic = new BABYLON.Sound('mySong', '../Assets/Music/PowerDown.wav', scene, null, {
+  //loop:true,
+  autoplay: true
+})
+//#endregion
+
 //#region RETURN SCENE_______________________
 
   return scene;
@@ -344,5 +399,7 @@ engine.runRenderLoop(function() {
 //resize window while keeping objects scaled
 window.addEventListener('resize', function() {
   engine.resize();
-})
+});
+
+//Inspector.Show(scene, {});
 //#endregion
