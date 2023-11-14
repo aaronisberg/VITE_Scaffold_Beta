@@ -1,4 +1,4 @@
-# VITE_Scaffold_Beta
+# VITE_Scaffold_Beta (2023)
 
 This project requrires setting up VITE scaffolding via npm.
 The full tutorial can be found here: https://www.youtube.com/watch?v=e6EkrLr8g_o&t=347s
@@ -20,3 +20,8 @@ The full tutorial can be found here: https://www.youtube.com/watch?v=e6EkrLr8g_o
 -	  Add <style>#canvas {width: 100%; height:100%;}</style>
 -	Add a <link stylesheet> reference to style.css
 -	Npm run dev to confirm.
+
+-	To add installers for object loaders:
+-	  npm install -D @babylonjs/loaders
+
+-	Regions within main.js contain each element, and code blocks using the /*..*/ comment can be uncommented (SHIFT + ALT + A) to turn each feature on or off.
