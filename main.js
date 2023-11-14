@@ -133,7 +133,7 @@ const box = new BABYLON.MeshBuilder.CreateBox('myBox', {
 
    //Box position on screen:
    box.position.x = 1;
-   box.position = new BABYLON.Vector3(0, .5, 0); 
+   box.position = new BABYLON.Vector3(0, .75, 0); 
 
    //Box Rotation on screen:
   /*box.rotation.x = Math.PI / 4;
@@ -321,12 +321,39 @@ scene.beginAnimation(box, 0, 250, true);
 
 const shadowGenerator = new BABYLON.ShadowGenerator(1024, light);
 
-//shadowGenerator.addShadowCaster(box);
+shadowGenerator.addShadowCaster(box);
 shadowGenerator.getShadowMap().renderList.push(box);
-ground.recieveShadows = true;
-shadowGenerator.setDarkness(0);
+ground.receiveShadows = true;
+shadowGenerator.setDarkness(.5);
+shadowGenerator.useBlurExponentialShadowMap = true;
+shadowGenerator.useKernelBlur = true;
+shadowGenerator.blurKernel = 64;
 //#endregion
  
+//#region Fog_______________________
+
+//LINEAR Fog
+/* scene.fogMode = BABYLON.Scene.FOGMODE_LINEAR;
+scene.fogStart = 30;
+scene.fogEnd = 60; */
+
+//EXPONENTIAL Fog
+scene.fogMode = BABYLON.Scene.FOGMODE_EXP2;
+scene.Density = .02;
+scene.fogColor = new BABYLON.Color3(.3,.2,.4);
+
+//#endregion
+
+//#region SELECTING OBJECTS_______________________
+scene.onPointerDown = function castRay() {
+  const hit = scene.pick(scene.pointerX, scene.pointerY);
+
+  if(hit.pickedMesh && hit.pickedMesh.name === 'myBox')
+  hit.pickedMesh.material = new BABYLON.StandardMaterial();
+  hit.pickedMesh.material.diffuseColor = BABYLON.Color3.Red();
+}
+//#endregion
+
 //#region RETURN SCENE_______________________
 
   return scene;
